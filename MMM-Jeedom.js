@@ -27,6 +27,7 @@ Module.register("MMM-Jeedom",{
 				statusoff: undefined,
 				sameLine1: false,
 				sameLine2: false,
+				maxLength: 50,
 			},
 		],
 		jeedomHTTPS: true
@@ -203,9 +204,15 @@ Module.register("MMM-Jeedom",{
 			}
 			
 			if (!sensor.boolean) {					
-				statusTD.innerHTML = statusTD.innerHTML + sensor.status;
+				//statusTD.innerHTML = statusTD.innerHTML + sensor.status;
+				sensorValue = sensor.status;
 				if(typeof sensor.unit !== 'undefined') {
 					statusTD.innerHTML = statusTD.innerHTML + " " + sensor.unit;
+					sensorValue = sensorValue.substring(0,sensor.maxLength - sensor.unit.length) + " " + sensor.unit;
+				}
+				else
+				{
+					sensorValue = sensorValue.substring(0,sensor.maxLength);
 				}
 				sensorWrapper.appendChild(statusTD);
 
