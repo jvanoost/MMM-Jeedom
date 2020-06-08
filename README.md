@@ -257,7 +257,8 @@ The following properties can be configured:
 					<li>unit : "%", : unit to display after the value of the sensor</li>
 					<li>sameLine1: false, : if true, it will be display on the same line than the "sameLine2: true". Only the value and the unit can be defined in that case. See example above</li>
 					<li>sameLine2: false, : if true, it will be display on the same line than the "sameLine1: true". The title and symbol define here will be used for both infos. See example above</li>
-					<li>maxlength: 50, : set a max length for display. If sensor is longer, the text will be truncate. default : 50</li>
+					<li>maxlength: 50, : set a max length for display. If sensor is longer, the text will be truncate. default : 100</li>
+					<li>splitCar: ",", : Split a long string and keep the first one. default : undefined</li>
 				</ul>
 			</td>
 		</tr>

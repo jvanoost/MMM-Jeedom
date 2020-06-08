@@ -27,7 +27,8 @@ Module.register("MMM-Jeedom",{
 				statusoff: undefined,
 				sameLine1: false,
 				sameLine2: false,
-				maxLength: 30,
+				maxLength: 100,
+				splitCar: undefined,
 			},
 		],
 		jeedomHTTPS: true
@@ -69,7 +70,9 @@ Module.register("MMM-Jeedom",{
 				statusoff: sensor.statusoff, 
 				sname: "",
 				boolean: sensor.boolean,
-				unit: sensor.unit};
+				unit: sensor.unit,
+				maxLength: sensor.maxLength,
+				splitCar: sensor.splitCar};
 			this.sensors.push(newSensor);
 		}
 		Log.log(this.sensors);
@@ -203,18 +206,32 @@ Module.register("MMM-Jeedom",{
 				+ sameLineUnitMemorisation + " - ";			
 			}
 			
+			Log.log("[Split car]'"+sensor.splitCar+"'");
+			
+
 			if (!sensor.boolean) {					
 				// avec troncage de ligne trop lingue
 				//statusTD.innerHTML = statusTD.innerHTML + sensor.status;
-				sensorValue = sensor.status; // on stocke la valeur
+				var sensorValue = sensor.status; // on stocke la valeur
 				if(typeof sensor.unit !== 'undefined') {
-					statusTD.innerHTML = statusTD.innerHTML + " " + sensor.unit;
-					sensorValue = sensorValue.substring(0,sensor.maxLength - sensor.unit.length) + " " + sensor.unit; // si valeur + unité > longueur maximale
+					//statusTD.innerHTML = statusTD.innerHTML + " " + sensor.unit;
+					var unity = sensor.unit;
+					sensorValue = sensorValue.toString().substring(0, sensor.maxLength - unity.length) + " " + sensor.unit; // si valeur + unité > longueur maximale
+					if(typeof sensor.splitCar !== 'undefined') {
+						var splitted =  sensorValue.split(sensor.splitCar);
+						sensorValue = splitted[0];
+					}
+					
+		1	}
+				else { // si pas d'unité
+					sensorValue = sensorValue.toString().substring(0,sensor.maxLength);
+					if(typeof sensor.splitCar !== 'undefined') {
+						var splitted =  sensorValue.split(sensor.splitCar);
+						sensorValue = splitted[0];
+					}
 				}
-				else
-				{ // si pas d'unité
-					sensorValue = sensorValue.substring(0,sensor.maxLength);
-				}
+				
+				statusTD.innerHTML = statusTD.innerHTML + sensorValue;
 				sensorWrapper.appendChild(statusTD);
 
 			} else if (sensor.status==1 && typeof sensor.statuson !== 'undefined') {
@@ -225,6 +242,7 @@ Module.register("MMM-Jeedom",{
 				statusTD.innerHTML = statusTD.innerHTML + sensor.statusoff;
 				sensorWrapper.appendChild(statusTD);
 			}
+
 
 			tableWrap.appendChild(sensorWrapper); //on ajoute tout ca à notre table
 		}
